@@ -1,4 +1,5 @@
-git://github.com/huggingface/accelerate.git
 datasets >= 2.0.0
-torch >= 1.3
+torch >= 1.7
 evaluate
+transformers==4.27.1
+torchvision
