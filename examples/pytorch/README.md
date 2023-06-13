@@ -5,11 +5,12 @@
 
 Inside each task's folder, there's a bash script for training:
 
-This script takes into 3 arguments
+This script takes into 4 arguments
 
 - `model`: name of the model to be downloaded from huggingface hub
 - `batch_size`
 - `output_dir`: where to save checkpoints and results
+- `gpu_model`: which gpu model to run
 
 And then it runs the Python training command.
 

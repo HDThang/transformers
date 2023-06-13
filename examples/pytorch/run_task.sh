@@ -11,6 +11,8 @@ bash all_scripts/check_file_exist.sh $train_script $task
 model_batchsize_file=${3:-model_batchsize.txt}
 bash all_scripts/check_file_exist.sh $model_batchsize_file $task
 
+## change SDA size
+gpu_model=${2:-2} #defaul is Medium.128GB
 
 # Create log and output dir inside task folder
 # ==================================
@@ -39,7 +41,7 @@ while read model batch_size ; do
 
     commands_to_run="
         cd $task
-        bash $train_script $model $batch_size $output_dir
+        bash $train_script $model $batch_size $output_dir $gpu_model
     "
 
     bash record.sh 0 $memory_log_file $terminal_log_file "$commands_to_run"
