@@ -1,20 +1,39 @@
-model=$1
-batch_size=$2
-output_dir=${3:-"./outputs/$model"}
+#!/bin/bash
+LOG_DIR="./logs"
+OUTPUT_DIR="./outputs"
+mkdir -p $LOG_DIR
+mkdir -p $OUTPUT_DIR
+##    SETTINGS     ## 
+MODEL=$1
+BATCH_SIZE=$2
+log_file="${LOG_DIR}/${model_name}.log"
+output_dir="${OUTPUT_DIR}/${model_name}"
+## END OF SETTINGS ##
+
+export TRANSFORMERS_CACHE=/nas/huggingface_pretrained_models
+export HF_DATASETS_CACHE=/nas/common_data/huggingface
 
 args="
---do_train
---do_eval
---learning_rate 5e-5
---num_train_epochs 3 
---overwrite_output
---use_auth_token True
---save_total_limit 2
+--do_train \
+--do_eval \
+--learning_rate 5e-5 \
+--num_train_epochs 3 \
+--logging_strategy steps \
+--logging_steps 100 \
+--overwrite_output \
+--use_auth_token True \
+--save_total_limit 2 \
+--save_strategy epoch \
+--seed 42 \
 "
 
+## Using moreh medium.128GB GPU
+moreh-switch-model --model 2
+
 python3 run_swag.py \
-    --model_name_or_path $model \
-    --per_device_eval_batch_size $batch_size \
-    --per_device_train_batch_size $batch_size \
+    --model_name_or_path $MODEL \
+    --per_device_eval_batch_size $BATCH_SIZE \
+    --per_device_train_batch_size $BATCH_SIZE \
     --output_dir $output_dir \
     $args \
+    2>&1 | tee $log_file
